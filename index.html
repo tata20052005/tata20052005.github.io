@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>梁欣 | AI算法应用工程师</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2E7D32',
+                        secondary: '#8D6E63',
+                        accent: '#4CAF50',
+                        highlight: '#A1887F',
+                        background: '#FFF8E1',
+                        textPrimary: '#2E7D32',
+                        textSecondary: '#689F38'
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'sans-serif'],
+                        roboto: ['Roboto', 'sans-serif'],
+                        consolas: ['Consolas', 'Monaco', 'monospace']
+                    },
+                    boxShadow: {
+                        'card': '0 2px 8px rgba(0,0,0,0.08)',
+                        'card-hover': '0 4px 16px rgba(0,0,0,0.12)'
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .transition-all-300 {
+                transition: all 0.3s ease;
+            }
+            .gradient-bg {
+                background: linear-gradient(135deg, #E8F5E8 0%, #FFF8E1 100%);
+            }
+            .float-animation {
+                animation: float 6s ease-in-out infinite;
+            }
+            @keyframes float {
+                0% { transform: translateY(0px); }
+                50% { transform: translateY(-10px); }
+                100% { transform: translateY(0px); }
+            }
+        }
+    </style>
+    <style>
+        /* 全局样式 */
+        body {
+            font-family: 'Inter', 'Roboto', sans-serif;
+            background-color: #FFF8E1;
+            color: #2E7D32;
+        }
+        
+        /* 滚动动画 */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* 进度条动画 */
+        .progress-bar {
+            width: 0;
+            transition: width 1.5s ease;
+        }
+        
+        .progress-bar.visible {
+            width: var(--width);
+        }
+        
+        /* 数字滚动动画 */
+        @keyframes countUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .count-animate {
+            animation: countUp 0.8s ease forwards;
+        }
+        
+        /* 卡片悬停效果 */
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+        }
+        
+        .card-hover:hover img {
+            transform: scale(1.05);
+        }
+        
+        /* 标签云效果 */
+        .tag-cloud span {
+            transition: all 0.3s ease;
+        }
+        
+        .tag-cloud span:hover {
+            transform: scale(1.1);
+            color: #007BFF;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="fixed top-0 left-0 w-full bg-white shadow-md z-50 transition-all duration-300" id="navbar">
+        <div class="container mx-auto px-6 md:px-8 max-w-6xl py-3 flex justify-between items-center">
+            <div class="flex items-center">
+                <h1 class="text-xl font-bold text-primary">梁欣 <span class="text-sm font-normal text-textSecondary">| AI算法应用工程师</span></h1>
+                <p class="text-xs text-textSecondary ml-4 hidden md:inline-block">计算机视觉 | 深度学习 | 大模型应用</p>
+            </div>
+            <div class="hidden md:flex space-x-8">
+                <a href="#education" class="text-textPrimary hover:text-highlight transition-all-300 relative">
+                    教育背景
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-highlight transition-all-300"></span>
+                </a>
+                <a href="#research" class="text-textPrimary hover:text-highlight transition-all-300 relative">
+                    研究成果
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-highlight transition-all-300"></span>
+                </a>
+                <a href="#competition" class="text-textPrimary hover:text-highlight transition-all-300 relative">
+                    竞赛经历
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-highlight transition-all-300"></span>
+                </a>
+                <a href="#skills" class="text-textPrimary hover:text-highlight transition-all-300 relative">
+                    专业技能
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-highlight transition-all-300"></span>
+                </a>
+                <a href="#contact" class="text-textPrimary hover:text-highlight transition-all-300 relative">
+                    联系方式
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-highlight transition-all-300"></span>
+                </a>
+            </div>
+            <div class="md:hidden">
+                <button id="menu-toggle" class="text-primary focus:outline-none">
+                    <i class="fa fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+        <!-- 移动端菜单 -->
+        <div id="mobile-menu" class="md:hidden bg-white shadow-lg absolute w-full left-0 top-full hidden">
+            <div class="container mx-auto px-6 md:px-8 max-w-6xl py-3 flex flex-col space-y-4">
+                <a href="#education" class="text-textPrimary hover:text-highlight py-2">教育背景</a>
+                <a href="#research" class="text-textPrimary hover:text-highlight py-2">研究成果</a>
+                <a href="#competition" class="text-textPrimary hover:text-highlight py-2">竞赛经历</a>
+                <a href="#skills" class="text-textPrimary hover:text-highlight py-2">专业技能</a>
+                <a href="#contact" class="text-textPrimary hover:text-highlight py-2">联系方式</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 首屏Banner -->
+    <section class="h-screen flex items-center justify-center relative gradient-bg" id="banner">
+        <div class="container mx-auto px-6 md:px-8 max-w-6xl text-center">
+            <div class="flex flex-col md:flex-row items-center justify-center gap-12 mb-12">
+                <div class="float-animation">
+                    <img src="1.jpg" alt="梁欣" class="w-52 h-52 md:w-72 md:h-72 object-cover rounded-full border-4 border-secondary shadow-lg">
+                </div>
+                <div class="text-center md:text-left">
+                    <h1 class="text-4xl md:text-5xl font-bold text-primary mb-6">梁欣</h1>
+                    <p class="text-xl md:text-2xl text-textPrimary mb-8">AI算法应用工程师 · 湖南工商大学 · 人工智能</p>
+                    <div class="flex flex-wrap justify-center md:justify-start gap-4 mb-10">
+                        <span class="bg-secondary/10 text-secondary px-5 py-2 rounded-full text-sm font-medium">国家奖学金</span>
+                        <span class="bg-secondary/10 text-secondary px-5 py-2 rounded-full text-sm font-medium">CCF T1论文一作</span>
+                        <span class="bg-secondary/10 text-secondary px-5 py-2 rounded-full text-sm font-medium">国家级大创主持人</span>
+                    </div>
+                    <p class="text-textSecondary">电话 19168194933 | 邮箱 2209020208@stu.hutb.edu.cn</p>
+                </div>
+            </div>
+        </div>
+        <div class="absolute bottom-10 left-0 right-0 flex justify-center animate-bounce">
+            <a href="#education" class="text-primary">
+                <i class="fa fa-chevron-down text-2xl"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- 教育背景 -->
+    <section class="py-20 bg-white" id="education">
+        <div class="container mx-auto px-6 md:px-8">
+            <div class="mb-8">
+                <h2 class="text-2xl md:text-3xl font-bold text-primary mb-2">// 教育背景</h2>
+                <div class="h-1 w-20 bg-accent"></div>
+            </div>
+            <div class="bg-background rounded-lg p-6 shadow-card">
+                <div class="grid md:grid-cols-2 gap-8 items-center">
+                    <div>
+                        <h3 class="text-xl font-semibold text-primary mb-4">湖南工商大学</h3>
+                        <p class="text-textSecondary mb-2">人工智能（鸿班）</p>
+                        <p class="text-textSecondary mb-4">2022.09 - 2026.07（本科在读）</p>
+                        <p class="text-textPrimary mb-2"><strong>GPA:</strong> 3.84/4.00（专业前5%）</p>
+                        <p class="text-textPrimary mb-4"><strong>荣誉:</strong> 2024-2025学年国家奖学金</p>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-primary mb-4">核心课程</h3>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="bg-secondary/10 text-secondary px-3 py-1 rounded-full text-sm">Python</span>
+                            <span class="bg-secondary/10 text-secondary px-3 py-1 rounded-full text-sm">数据结构</span>
+                            <span class="bg-secondary/10 text-secondary px-3 py-1 rounded-full text-sm">机器学习</span>
+                            <span class="bg-secondary/10 text-secondary px-3 py-1 rounded-full text-sm">深度学习</span>
+                            <span class="bg-secondary/10 text-secondary px-3 py-1 rounded-full text-sm">计算机视觉</span>
+                            <span class="bg-secondary/10 text-secondary px-3 py-1 rounded-full text-sm">自然语言处理</span>
+                            <span class="bg-secondary/10 text-secondary px-3 py-1 rounded-full text-sm">智能语音</span>
+                        </div>
+                        <h3 class="text-lg font-semibold text-primary mt-6 mb-4">校级奖项</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <span class="bg-secondary/10 text-secondary px-3 py-2 rounded-lg text-sm">2023-2024学年度国家励志奖学金</span>
+                            <span class="bg-secondary/10 text-secondary px-3 py-2 rounded-lg text-sm">2025年度嘉宝莉助学基金</span>
+                            <span class="bg-secondary/10 text-secondary px-3 py-2 rounded-lg text-sm">2023-2025两学年度校级“三好学生”</span>
+                            <span class="bg-secondary/10 text-secondary px-3 py-2 rounded-lg text-sm">2024-2025学年湘江书院“鸿班”科技创新奖</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 研究成果 -->
+    <section class="py-20 bg-background" id="research">
+        <div class="container mx-auto px-6 md:px-8">
+            <div class="mb-8">
+                <h2 class="text-2xl md:text-3xl font-bold text-primary mb-2">// 研究成果</h2>
+                <div class="h-1 w-20 bg-accent"></div>
+            </div>
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- 论文卡片 -->
+                <div class="bg-white rounded-lg overflow-hidden shadow-card card-hover">
+                    <div class="h-48 overflow-hidden">
+                        <img src="2.jpg" alt="DynKANet图像语义分割网络" class="w-full h-full object-cover transition-transform duration-300">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold text-primary mb-2">DynKANet图像语义分割网络</h3>
+                        <p class="text-textSecondary mb-4">《电子学报》2025年刊（CCF T1中文A类），第一作者</p>
+                    </div>
+                </div>
+                
+                <!-- 国家级大创卡片 -->
+                <div class="bg-white rounded-lg overflow-hidden shadow-card card-hover">
+                    <div class="h-48 overflow-hidden">
+                        <img src="3.jpg" alt="数字孪生钢构件智能焊接机器人" class="w-full h-full object-cover transition-transform duration-300">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold text-primary mb-2">数字孪生钢构件智能焊接机器人</h3>
+                        <p class="text-textSecondary mb-2">国家级大学生创新创业训练计划项目，核心技术：3D视觉、2D/3D双模态融合</p>
+                        <p class="text-highlight font-medium">焊缝定位误差≤0.8mm</p>
+                    </div>
+                </div>
+                
+                <!-- 竞赛+软著卡片 -->
+                <div class="bg-white rounded-lg overflow-hidden shadow-card card-hover">
+                    <div class="h-48 overflow-hidden">
+                        <img src="4.jpg" alt="钢材缺陷检测分割" class="w-full h-full object-cover transition-transform duration-300">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold text-primary mb-2">钢材缺陷检测分割（DynKANet）</h3>
+                        <p class="text-textSecondary mb-2">全国二等奖，mIoU提升8%，软件著作权（第二作者）</p>
+                    </div>
+                </div>
+                
+                <!-- 湘江实验室卡片 -->
+                <div class="bg-white rounded-lg overflow-hidden shadow-card card-hover">
+                    <div class="h-48 overflow-hidden">
+                        <img src="5.jpg" alt="焊接工艺推荐RAG系统" class="w-full h-full object-cover transition-transform duration-300">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold text-primary mb-2">焊接工艺推荐RAG系统</h3>
+                        <p class="text-textSecondary mb-2">召回率+19%，准确率+18.5%，发明专利（第二作者）</p>
+                    </div>
+                </div>
+                
+                <!-- 论文在投卡片 -->
+                <div class="bg-white rounded-lg overflow-hidden shadow-card card-hover md:col-span-2">
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="h-48 overflow-hidden">
+                            <img src="6.jpg" alt="低空多域无人装备协同" class="w-full h-full object-cover transition-transform duration-300">
+                        </div>
+                        <div class="p-6 flex flex-col justify-center">
+                            <h3 class="text-xl font-semibold text-primary mb-2">低空多域无人装备协同（FDMTrack跟踪模型）</h3>
+                            <p class="text-textSecondary mb-4">PR+8.9%，SR+8.0%，第二作者（ICAIS&ISAS 2026论文在投）</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 竞赛经历 -->
+    <section class="py-20 bg-white" id="competition">
+        <div class="container mx-auto px-6 md:px-8">
+            <div class="mb-8">
+                <h2 class="text-2xl md:text-3xl font-bold text-primary mb-2">// 竞赛经历</h2>
+                <div class="h-1 w-20 bg-accent"></div>
+            </div>
+            <div class="space-y-6">
+                <!-- 竞赛项1 -->
+                <div class="bg-background rounded-lg p-6 shadow-card">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between">
+                        <h3 class="text-xl font-semibold text-primary mb-2 md:mb-0">全球校园AI算法精英大赛</h3>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="bg-highlight/10 text-highlight px-3 py-1 rounded-full text-sm font-medium">全国一等奖（AIGC检测）</span>
+                            <span class="bg-highlight/10 text-highlight px-3 py-1 rounded-full text-sm font-medium">全国二等奖（缺陷分割）</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 竞赛项2 -->
+                <div class="bg-background rounded-lg p-6 shadow-card">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between">
+                        <h3 class="text-xl font-semibold text-primary mb-2 md:mb-0">iCAN大学生创新创业大赛“算能杯”RISC-V开源技术挑战赛</h3>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="bg-highlight/10 text-highlight px-3 py-1 rounded-full text-sm font-medium">全国一等奖（队长，教育AI方向）</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 竞赛项3 -->
+                <div class="bg-background rounded-lg p-6 shadow-card">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between">
+                        <h3 class="text-xl font-semibold text-primary mb-2 md:mb-0">全国大学生数学建模竞赛</h3>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="bg-highlight/10 text-highlight px-3 py-1 rounded-full text-sm font-medium">全国二等奖</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 竞赛项4 -->
+                <div class="bg-background rounded-lg p-6 shadow-card">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between">
+                        <h3 class="text-xl font-semibold text-primary mb-2 md:mb-0">中国机器人及人工智能大赛</h3>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="bg-highlight/10 text-highlight px-3 py-1 rounded-full text-sm font-medium">全国三等奖（队长，自动驾驶方向）</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 专业技能 -->
+    <section class="py-20 bg-background" id="skills">
+        <div class="container mx-auto px-6 md:px-8">
+            <div class="mb-8">
+                <h2 class="text-2xl md:text-3xl font-bold text-primary mb-2">// 专业技能</h2>
+                <div class="h-1 w-20 bg-accent"></div>
+            </div>
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- 技能进度条 -->
+                <div class="bg-white rounded-lg p-6 shadow-card">
+                    <h3 class="text-lg font-semibold text-primary mb-4">技能掌握程度</h3>
+                    <div class="space-y-6">
+                        <!-- 深度学习 -->
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="text-textPrimary">深度学习</span>
+                                <span class="text-textSecondary">95%</span>
+                            </div>
+                            <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
+                                <div class="progress-bar h-full bg-accent rounded-full" style="--width: 95%"></div>
+                            </div>
+                            <p class="text-sm text-textSecondary mt-1">PyTorch、CNN、Transformer、Mamba</p>
+                        </div>
+                        
+                        <!-- 编程能力 -->
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="text-textPrimary">编程能力</span>
+                                <span class="text-textSecondary">90%</span>
+                            </div>
+                            <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
+                                <div class="progress-bar h-full bg-accent rounded-full" style="--width: 90%"></div>
+                            </div>
+                            <p class="text-sm text-textSecondary mt-1">Python、C++、STL、并发编程</p>
+                        </div>
+                        
+                        <!-- 大模型应用 -->
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="text-textPrimary">大模型应用</span>
+                                <span class="text-textSecondary">85%</span>
+                            </div>
+                            <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
+                                <div class="progress-bar h-full bg-accent rounded-full" style="--width: 85%"></div>
+                            </div>
+                            <p class="text-sm text-textSecondary mt-1">LangChain、RAG、LoRA微调</p>
+                        </div>
+                        
+                        <!-- 工具使用 -->
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="text-textPrimary">工具使用</span>
+                                <span class="text-textSecondary">90%</span>
+                            </div>
+                            <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
+                                <div class="progress-bar h-full bg-accent rounded-full" style="--width: 90%"></div>
+                            </div>
+                            <p class="text-sm text-textSecondary mt-1">Git、Trea、Cursor</p>
+                        </div>
+                        
+                        <!-- 语言能力 -->
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="text-textPrimary">语言能力</span>
+                                <span class="text-textSecondary">80%</span>
+                            </div>
+                            <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
+                                <div class="progress-bar h-full bg-accent rounded-full" style="--width: 80%"></div>
+                            </div>
+                            <p class="text-sm text-textSecondary mt-1">英语CET6（507分）、普通话二甲</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 标签云 -->
+                <div class="bg-white rounded-lg p-6 shadow-card">
+                    <h3 class="text-lg font-semibold text-primary mb-4">技能标签</h3>
+                    <div class="tag-cloud flex flex-wrap gap-3">
+                        <span class="bg-secondary/10 text-secondary px-4 py-2 rounded-full text-sm">PyTorch</span>
+                        <span class="bg-secondary/10 text-secondary px-4 py-2 rounded-full text-sm">CNN</span>
+                        <span class="bg-secondary/10 text-secondary px-4 py-2 rounded-full text-sm">Transformer</span>
+                        <span class="bg-secondary/10 text-secondary px-4 py-2 rounded-full text-sm">Mamba</span>
+                        <span class="bg-secondary/10 text-secondary px-4 py-2 rounded-full text-sm">Python</span>
+                        <span class="bg-secondary/10 text-secondary px-4 py-2 rounded-full text-sm">C++</span>
+                        <span class="bg-secondary/10 text-secondary px-4 py-2 rounded-full text-sm">STL</span>
+                        <span class="bg-secondary/10 text-secondary px-4 py-2 rounded-full text-sm">并发编程</span>
+                        <span class="bg-secondary/10 text-secondary px-4 py-2 rounded-full text-sm">LangChain</span>
+                        <span class="bg-secondary/10 text-secondary px-4 py-2 rounded-full text-sm">RAG</span>
+                        <span class="bg-secondary/10 text-secondary px-4 py-2 rounded-full text-sm">LoRA微调</span>
+                        <span class="bg-secondary/10 text-secondary px-4 py-2 rounded-full text-sm">Git</span>
+                        <span class="bg-secondary/10 text-secondary px-4 py-2 rounded-full text-sm">Trea</span>
+                        <span class="bg-secondary/10 text-secondary px-4 py-2 rounded-full text-sm">Cursor</span>
+                    </div>
+                    <!-- 扩展内容 -->
+                    <div class="mt-8 pt-6 border-t border-gray-100">
+                        <h4 class="text-lg font-semibold text-primary mb-4">技术栈与工具</h4>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <h5 class="font-medium text-secondary mb-2">深度学习框架</h5>
+                                <ul class="list-disc list-inside text-textSecondary space-y-1">
+                                    <li>PyTorch</li>
+                                    <li>TensorFlow</li>
+                                    <li>Keras</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h5 class="font-medium text-secondary mb-2">开发工具</h5>
+                                <ul class="list-disc list-inside text-textSecondary space-y-1">
+                                    <li>VS Code</li>
+                                    <li>Jupyter Notebook</li>
+                                    <li>Git</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h5 class="font-medium text-secondary mb-2">数据处理</h5>
+                                <ul class="list-disc list-inside text-textSecondary space-y-1">
+                                    <li>NumPy</li>
+                                    <li>Pandas</li>
+                                    <li>OpenCV</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h5 class="font-medium text-secondary mb-2">部署平台</h5>
+                                <ul class="list-disc list-inside text-textSecondary space-y-1">
+                                    <li>Docker</li>
+                                    <li>Linux</li>
+                                    <li>Cloud Services</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 联系方式 -->
+    <footer class="bg-primary text-white py-12" id="contact">
+        <div class="container mx-auto px-6 md:px-8 max-w-6xl text-center">
+            <h2 class="text-2xl font-bold mb-6">联系方式</h2>
+            <div class="flex flex-col md:flex-row justify-center gap-8 mb-8">
+                <div class="flex items-center justify-center">
+                    <i class="fa fa-phone mr-3 text-yellow-100"></i>
+                    <span>19168194933</span>
+                </div>
+                <div class="flex items-center justify-center">
+                    <i class="fa fa-envelope mr-3 text-yellow-100"></i>
+                    <span>2209020208@stu.hutb.edu.cn</span>
+                </div>
+            </div>
+            <p class="text-gray-300">© 2026 梁欣 - AI算法应用工程师 保留所有权利</p>
+        </div>
+    </footer>
+
+    <script>
+        // 导航栏滚动效果
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('py-2');
+                navbar.classList.remove('py-3');
+            } else {
+                navbar.classList.add('py-3');
+                navbar.classList.remove('py-2');
+            }
+        });
+        
+        // 移动端菜单切换
+        document.getElementById('menu-toggle').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        // 滚动动画
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+        
+        // 观察所有需要动画的元素
+        document.querySelectorAll('.fade-in, .progress-bar').forEach(el => {
+            observer.observe(el);
+        });
+        
+        // 导航栏激活状态
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('nav a');
+        
+        window.addEventListener('scroll', function() {
+            let current = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (window.scrollY >= sectionTop - 200) {
+                    current = section.getAttribute('id');
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.querySelector('span').style.width = '0';
+                if (link.getAttribute('href').substring(1) === current) {
+                    link.querySelector('span').style.width = '100%';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
